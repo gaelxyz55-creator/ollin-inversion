@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OLLIN · Inversión</title>
+<meta name="description" content="OLLIN: el área de marketing de una empresa operada por agentes de IA y una sola persona. Números reales al 3-nov-2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F1E7;--surface:#FCFAF5;--ink:#141414;--ink2:#4A4640;--muted:#7A746A;--line:#E2DACB;--grid:#ECE5D8;
+  --fuego:#A63A2B;--agua:#00927F;--tierra:#B97A16;--aire:#5E5BA6;
+  --ok:#2E7D4F;--warn:#B26B00;--bad:#B3261E;
+  --chip:#EFE7D8;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141414;--surface:#1C1B19;--ink:#F2EBDD;--ink2:#CFC7B8;--muted:#9C958A;--line:#34312C;--grid:#2A2825;
+  --fuego:#E0604C;--agua:#1FA88F;--tierra:#BC8224;--aire:#8582D6;--ok:#5BBE83;--warn:#E3A33B;--bad:#F07167;--chip:#2A2825;}}
+:root[data-theme="dark"]{--bg:#141414;--surface:#1C1B19;--ink:#F2EBDD;--ink2:#CFC7B8;--muted:#9C958A;--line:#34312C;--grid:#2A2825;
+  --fuego:#E0604C;--agua:#1FA88F;--tierra:#BC8224;--aire:#8582D6;--ok:#5BBE83;--warn:#E3A33B;--bad:#F07167;--chip:#2A2825;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header.hero{padding:56px 0 32px;border-bottom:1px solid var(--line)}
+.kicker{font:500 12px/1 "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{font:700 clamp(36px,6vw,64px)/1.02 Fraunces,serif;margin:14px 0 16px;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--fuego)}
+.lede{font-size:clamp(17px,2vw,20px);color:var(--ink2);max-width:720px;margin:0}
+h2{font:700 clamp(26px,3.4vw,36px)/1.1 Fraunces,serif;margin:0 0 6px}
+h3{font:600 18px/1.3 "IBM Plex Sans";margin:0 0 6px}
+.q{font:500 12px/1 "IBM Plex Mono";letter-spacing:.12em;color:var(--fuego);text-transform:uppercase;margin-bottom:10px;display:block}
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+.sub{color:var(--ink2);max-width:760px;margin:0 0 24px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:28px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.tile b{display:block;font:700 30px/1.1 Fraunces,serif}
+.tile span{font-size:13px;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+nav.toc{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+nav.toc .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:none}
+nav.toc a{flex:none;text-decoration:none;font-size:13px;padding:6px 10px;border-radius:99px;background:var(--chip);color:var(--ink2)}
+nav.toc a:hover{color:var(--ink)}
+figure{margin:0}
+figure img{width:100%;display:block;border-radius:12px;border:1px solid var(--line)}
+figcaption{font-size:13px;color:var(--muted);margin-top:8px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--line);padding:8px 10px}
+td{border-bottom:1px solid var(--grid);padding:10px;vertical-align:top}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:2px 8px;border-radius:99px;background:var(--chip);margin:2px 4px 2px 0;white-space:nowrap}
+.st{font-weight:600;font-size:13px;white-space:nowrap}
+.st.ok{color:var(--ok)}.st.warn{color:var(--warn)}.st.bad{color:var(--bad)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.filters button,.seg button{font:500 13px "IBM Plex Sans";border:1px solid var(--line);background:var(--surface);color:var(--ink2);padding:7px 12px;border-radius:99px;cursor:pointer}
+.filters button[aria-pressed="true"],.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .tt{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;padding:6px 9px;border-radius:8px;white-space:nowrap;opacity:0;transform:translate(-50%,-110%);transition:opacity .1s}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--ink2);margin:6px 0 10px}
+.calc label{display:block;font-size:13px;color:var(--ink2);margin:14px 0 4px}
+.calc input[type=range]{width:100%;accent-color:var(--fuego)}
+.calc output{font:600 14px "IBM Plex Mono";color:var(--ink)}
+.big{font:700 34px/1.1 Fraunces,serif}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:16px}
+.res div{background:var(--chip);border-radius:10px;padding:12px}
+.res b{display:block;font:700 22px Fraunces,serif}
+.res span{font-size:12px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted)}
+.callout{border-left:4px solid var(--fuego);padding:12px 16px;background:var(--surface);border-radius:0 12px 12px 0}
+.verdict{background:var(--ink);color:var(--bg);border-radius:16px;padding:24px}
+.verdict h3{font:700 22px Fraunces,serif;margin-bottom:10px}
+.verdict ol{margin:0;padding-left:20px}
+.verdict li{margin:6px 0}
+ul.clean{margin:8px 0 0;padding-left:18px}
+ul.clean li{margin:4px 0}
+.rank{font:700 40px/1 Fraunces,serif;color:var(--fuego)}
+.diagram svg{width:100%;height:auto;display:block}
+.diagram text{font-family:"IBM Plex Sans";fill:var(--ink)}
+footer{padding:40px 0 60px;color:var(--muted);font-size:13px}
+.themebtn{position:fixed;right:14px;bottom:14px;z-index:9;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:8px 12px;font-size:12px;cursor:pointer}
+@media (max-width:600px){section{padding:40px 0}.hide-s{display:none}
+  .tw table thead{display:none}.tw table tr{display:block;padding:10px 4px;border-bottom:1px solid var(--line)}
+  .tw table td{display:block;border:0;padding:3px 10px}.tw table td:first-child{font-weight:600}}
+</style>
+</head>
+<body>
+<button class="themebtn" id="themebtn" aria-label="Cambiar tema">◐ Tema</button>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">OLLIN · documento para inversionista · números al 3-nov-2026</div>
+  <h1>El área de marketing de una empresa, <em>operada por agentes de IA</em> y una sola persona.</h1>
+  <p class="lede">Gael García dirige; 25 agentes producen, publican, miden y documentan. Hoy corre en dos empresas reales: su negocio de contenido para negocios y la serie de videos Packaging Lingo de Para Paquetes. Aquí está dónde vive, cuánto cuesta, cómo se audita, cómo se mide el retorno y cómo se vende.</p>
+  <div class="tiles">
+    <div class="tile"><b>25</b><span>agentes en 2 pisos + la oficina</span></div>
+    <div class="tile"><b>7</b><span>tareas que corren solas (lun a vie)</span></div>
+    <div class="tile"><b>$3,300</b><span>MXN al mes de costo fijo</span></div>
+    <div class="tile"><b>269 M</b><span>tokens medidos en 12 días</span></div>
+    <div class="tile"><b>10</b><span>episodios de Lingo publicados y medidos</span></div>
+    <div class="tile"><b>0</b><span>clientes pagados de Contenido (aún)</span></div>
+  </div>
+</div></header>
+
+<nav class="toc" aria-label="Secciones"><div class="wrap">
+  <a href="#donde">Dónde vive</a><a href="#alternativas">Dónde más</a><a href="#auditar">Auditar</a><a href="#roi">ROI</a><a href="#vender">Vender</a><a href="#conviene">Qué conviene</a><a href="#relacion">Los 3 pisos</a><a href="#docs">Documentación</a><a href="#riesgos">Riesgos</a>
+</div></nav>
+
+<main class="wrap">
+
+<!-- 1 DÓNDE VIVE -->
+<section id="donde">
+  <span class="q">Pregunta 1</span>
+  <h2>¿Dónde vive cada agente? ¿Tiene varios ecosistemas?</h2>
+  <p class="sub">Sí. Un agente no es un programa en un solo lugar: sus <b>instrucciones</b> viven en la carpeta (su AGENTE.md), <b>trabaja</b> dentro de un chat o de una tarea programada en la nube, <b>usa</b> herramientas en otros sitios (Chrome, Flow, GitHub) y <b>reporta</b> en la oficina. La mayoría toca 3 a 5 ecosistemas.</p>
+
+  <div class="card diagram" style="margin-bottom:20px">
+    <svg viewBox="0 0 1000 430" role="img" aria-label="Diagrama del ecosistema de OLLIN">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="var(--muted)"/></marker></defs>
+      <g stroke="var(--muted)" stroke-width="1.6" fill="none" marker-end="url(#ar)">
+        <path d="M500 92 V140"/><path d="M380 205 H260"/><path d="M620 205 H740"/>
+        <path d="M500 268 V320"/><path d="M440 268 L300 330"/><path d="M560 268 L700 330"/>
+      </g>
+      <rect x="380" y="20" width="240" height="72" rx="14" fill="var(--surface)" stroke="var(--fuego)" stroke-width="2"/>
+      <text x="500" y="50" text-anchor="middle" font-weight="600" font-size="17">Gael (dirige)</text>
+      <text x="500" y="72" text-anchor="middle" font-size="13" fill="var(--muted)" style="fill:var(--muted)">Sí / Corrige · objetivo · criterio</text>
+      <rect x="380" y="142" width="240" height="126" rx="14" fill="var(--fuego)"/>
+      <text x="500" y="178" text-anchor="middle" font-weight="700" font-size="20" style="fill:#fff">OFICINA</text>
+      <text x="500" y="202" text-anchor="middle" font-size="13" style="fill:#fff">página + base de datos</text>
+      <text x="500" y="222" text-anchor="middle" font-size="13" style="fill:#fff">estados, bandeja, bitácora,</text>
+      <text x="500" y="242" text-anchor="middle" font-size="13" style="fill:#fff">gasto, calendario</text>
+      <rect x="20" y="150" width="240" height="110" rx="14" fill="var(--surface)" stroke="var(--agua)" stroke-width="2"/>
+      <text x="140" y="182" text-anchor="middle" font-weight="600" font-size="16">CEREBRO</text>
+      <text x="140" y="204" text-anchor="middle" font-size="13" style="fill:var(--ink2)">Proyecto de Claude (reglas)</text>
+      <text x="140" y="224" text-anchor="middle" font-size="13" style="fill:var(--ink2)">3 bóvedas de Obsidian</text>
+      <text x="140" y="244" text-anchor="middle" font-size="13" style="fill:var(--ink2)">respaldo en GitHub</text>
+      <rect x="740" y="150" width="240" height="110" rx="14" fill="var(--surface)" stroke="var(--aire)" stroke-width="2"/>
+      <text x="860" y="182" text-anchor="middle" font-weight="600" font-size="16">NUBE DE CLAUDE</text>
+      <text x="860" y="204" text-anchor="middle" font-size="13" style="fill:var(--ink2)">chats por piso</text>
+      <text x="860" y="224" text-anchor="middle" font-size="13" style="fill:var(--ink2)">7 tareas programadas</text>
+      <text x="860" y="244" text-anchor="middle" font-size="13" style="fill:var(--ink2)">subagentes de revisión</text>
+      <rect x="150" y="330" width="220" height="84" rx="14" fill="var(--surface)" stroke="var(--tierra)" stroke-width="2"/>
+      <text x="260" y="362" text-anchor="middle" font-weight="600" font-size="16">LAPTOP</text>
+      <text x="260" y="384" text-anchor="middle" font-size="13" style="fill:var(--ink2)">carpeta OLLIN · my-video</text>
+      <text x="260" y="402" text-anchor="middle" font-size="13" style="fill:var(--ink2)">render, scripts, archivos</text>
+      <rect x="390" y="330" width="220" height="84" rx="14" fill="var(--surface)" stroke="var(--tierra)" stroke-width="2"/>
+      <text x="500" y="362" text-anchor="middle" font-weight="600" font-size="16">CHROME</text>
+      <text x="500" y="384" text-anchor="middle" font-size="13" style="fill:var(--ink2)">Facebook · Instagram</text>
+      <text x="500" y="402" text-anchor="middle" font-size="13" style="fill:var(--ink2)">Business Suite · Flow</text>
+      <rect x="630" y="330" width="220" height="84" rx="14" fill="var(--surface)" stroke="var(--tierra)" stroke-width="2"/>
+      <text x="740" y="362" text-anchor="middle" font-weight="600" font-size="16">AFUERA</text>
+      <text x="740" y="384" text-anchor="middle" font-size="13" style="fill:var(--ink2)">GitHub Pages (menús)</text>
+      <text x="740" y="402" text-anchor="middle" font-size="13" style="fill:var(--ink2)">Gemini · ChatGPT · Meta</text>
+    </svg>
+  </div>
+
+  <div class="filters" role="group" aria-label="Filtrar por piso">
+    <button data-f="todos" aria-pressed="true">Todos (25 + 3)</button>
+    <button data-f="Contenido">Contenido</button>
+    <button data-f="Lingo">Lingo</button>
+    <button data-f="Oficina">Oficina</button>
+    <button data-f="solo">Corren solos</button>
+  </div>
+  <div class="tw"><table id="agentes"><thead><tr><th>Agente</th><th>Piso</th><th>Dónde trabaja</th><th>Ecosistemas que toca</th><th>Huella al 3-nov</th></tr></thead><tbody></tbody></table></div>
+  <p class="note">Fuente: base de la oficina (agentes, bitácora) y tareas programadas, leídas el 3-nov-2026 10:40. «Huella» = la última vez que dejó algo verificable.</p>
+
+  <div class="grid3" style="margin-top:24px">
+    <figure><img src="img/oficina.jpg" alt="Vista aérea de la oficina isométrica con los cuartos de los agentes" loading="lazy"><figcaption>La oficina: cada cuarto es un agente; se toca para ver su trabajo.</figcaption></figure>
+    <figure><img src="img/voz.jpg" alt="Ficha del agente VOZ dentro de la oficina" loading="lazy"><figcaption>Ficha de un agente (VOZ de Lingo) con lo que entregó.</figcaption></figure>
+    <figure><img src="img/flow.jpg" alt="Ficha del agente IMÁGENES con imágenes de Flow" loading="lazy"><figcaption>IMÁGENES: lo que generó en Google Flow para el episodio.</figcaption></figure>
+  </div>
+</section>
+
+<!-- 2 ALTERNATIVAS -->
+<section id="alternativas">
+  <span class="q">Pregunta 2</span>
+  <h2>¿Dónde más podría vivir el sistema? ¿Cuál es más económico y eficiente?</h2>
+  <p class="sub">Hoy todo corre con una suscripción fija de Claude. La pregunta es si conviene pagar por uso (API), mover piezas a un servidor o usar un orquestador. Con el volumen medido, la suscripción gana por mucho.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Opción</th><th>Cómo sería</th><th>Costo al mes</th><th>Corre sin la laptop</th><th>Veredicto</th></tr></thead>
+    <tbody>
+      <tr><td><b>A · Hoy</b></td><td>Suscripción Claude (plan Max) + laptop + Chrome + Flow</td><td>$3,300 MXN fijos</td><td><span class="st bad">No</span> (Chrome y laptop prendidos)</td><td><span class="st ok">La más barata hoy</span></td></tr>
+      <tr><td><b>B · A + servidor chico</b></td><td>Lo mismo, y las tareas que no necesitan sesión de Facebook pasan a un servidor de ~€5</td><td>+ ~$110 MXN</td><td><span class="st warn">En parte</span></td><td><span class="st ok">Siguiente paso</span> al tener 3 clientes</td></tr>
+      <tr><td><b>C · API pago por uso</b></td><td>Agentes con el SDK de Claude, cobrados por token</td><td id="apiCell">ver calculadora</td><td><span class="st ok">Sí</span></td><td><span class="st bad">5 a 10 veces más caro</span> a este volumen</td></tr>
+      <tr><td><b>D · Orquestador (n8n)</b></td><td>n8n en servidor propio dispara pasos fijos (publicar, medir) con modelos baratos</td><td>€0–20 + API</td><td><span class="st ok">Sí</span></td><td><span class="st warn">Sólo para tareas repetidas</span></td></tr>
+      <tr><td><b>E · Conexiones gratis</b></td><td>Gemini, ChatGPT, NotebookLM para tareas puntuales (oír un video, segunda opinión)</td><td>$0</td><td>—</td><td><span class="st ok">Complemento</span>, no reemplazo</td></tr>
+    </tbody></table></div>
+
+  <div class="grid2" style="margin-top:20px">
+    <div class="card calc">
+      <h3>Calculadora · suscripción contra pago por uso</h3>
+      <label for="tok">Tokens al mes <output id="tokO"></output></label>
+      <input id="tok" type="range" min="100" max="1500" step="50" value="650">
+      <div class="seg" role="group" aria-label="Modelo" style="margin-top:12px;display:flex;gap:6px">
+        <button data-m="opus" aria-pressed="true">Opus</button><button data-m="sonnet" aria-pressed="false">Sonnet</button><button data-m="mix" aria-pressed="false">Mezcla 50/50</button>
+      </div>
+      <div class="res">
+        <div><b id="apiUsd"></b><span>API, USD al mes</span></div>
+        <div><b id="apiMxn"></b><span>API, MXN al mes</span></div>
+        <div><b>$1,800</b><span>Claude hoy, MXN fijo</span></div>
+        <div><b id="veces"></b><span>veces más caro</span></div>
+      </div>
+      <p class="note" style="margin-top:12px">Ritmo medido: 269 M tokens en 12 días ≈ 650 M al mes. Supuestos (estimado): 80 % del uso es releer la plática (caché), 12 % escritura de caché, 5 % entrada, 3 % salida; precios publicados de Opus 5.5 ($4/$20, caché $0.20) y Sonnet 5.5 ($2/$10, caché $0.20) por millón; $18 MXN por dólar.</p>
+    </div>
+    <div class="card">
+      <h3>Por qué la suscripción gana</h3>
+      <ul class="clean">
+        <li>El 70 % del gasto es <b>releer la plática</b>; en API eso se cobra, en la suscripción no.</li>
+        <li>El límite real no es dinero: es el <b>tope de uso</b>. Por eso OLLIN mide pasos y cambia de chat con una regla con número (pasos × pasos que faltan ≤ 6,000; tope 150).</li>
+        <li>La debilidad de A no es el costo: es que <b>depende de la laptop y del Chrome</b>. El 3-nov dos tareas se atoraron por eso. B la resuelve en parte por ~$110 MXN.</li>
+        <li>API (C) conviene sólo cuando cada cliente pague su propio uso, o para un paso pequeño con un modelo barato.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 3 AUDITAR -->
+<section id="auditar">
+  <span class="q">Pregunta 3</span>
+  <h2>¿Cómo se auditan los agentes?</h2>
+  <p class="sub">Regla de oro: <b>«terminó bien» no prueba nada; la prueba es la huella</b>. Una tarea puede decir que terminó en 4 segundos y haber trabajado, o decir que terminó y no haber dejado nada (falla silenciosa).</p>
+  <div class="grid3">
+    <div class="card"><div class="rank">1</div><h3>Huella</h3><p class="note" style="color:var(--ink2)">¿Cambió su estado en la oficina, dejó línea en la bitácora, un archivo o un pendiente? Si corrió y no dejó nada: falla silenciosa.</p></div>
+    <div class="card"><div class="rank">2</div><h3>Su métrica</h3><p class="note" style="color:var(--ink2)">Cada agente tiene una meta con número (ej. DIFUSIÓN: lo del calendario sale el día que toca, 10 de 10). Se grafica cada viernes.</p></div>
+    <div class="card"><div class="rank">3</div><h3>Errores sembrados</h3><p class="note" style="color:var(--ink2)">Se le meten errores a propósito al REVISOR; debe atrapar 9 de 10.</p></div>
+    <div class="card"><div class="rank">4</div><h3>4 preguntas cada miércoles</h3><p class="note" style="color:var(--ink2)">¿Cumplió su meta? ¿Dónde gastó de más? ¿Qué hizo a mano que podría ser automático? ¿Qué error repitió? (INVESTIGADOR DE MEJORAS)</p></div>
+    <div class="card"><div class="rank">5</div><h3>Gasto por sesión</h3><p class="note" style="color:var(--ink2)">Cada chat mide sus tokens al cerrar; el ANALISTA los grafica a las 17:41 y propone la forma más barata.</p></div>
+    <div class="card"><div class="rank">6</div><h3>Auditoría completa</h3><p class="note" style="color:var(--ink2)">Cada semana o dos: todos los agentes contra lo acordado, con evidencia, arreglo y dueño. La de hoy, abajo.</p></div>
+  </div>
+
+  <h3 style="margin:30px 0 10px">Resultado de la auditoría del 3-nov</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Qué</th><th>Estado</th><th>Evidencia</th></tr></thead>
+    <tbody>
+      <tr><td>7 tareas programadas</td><td><span class="st ok">Todas dejan huella</span></td><td>Bitácora y archivos de hoy (DIFUSIÓN 9:25, SUPERVISOR 9:44, ANALISTA 8:50)</td></tr>
+      <tr><td>Chrome conectado</td><td><span class="st bad">Falla</span></td><td>DIFUSIÓN y SUPERVISOR atorados el 30-oct y el 3-nov; se perdió una lectura de 48 h</td></tr>
+      <tr><td>VERIFICADOR</td><td><span class="st bad">Quieto desde el 20-oct</span></td><td>Salieron 14 anuncios y 3 menús sin su revisión</td></tr>
+      <tr><td>Documentación visible</td><td><span class="st bad">Sin dueño</span></td><td>OLLIN · Documentación sin cambios desde el 18-oct; la de Lingo desde el 30-sep</td></tr>
+      <tr><td>Alertas de gasto</td><td><span class="st warn">Ruido</span></td><td>Se repetían 3 alertas ya resueltas; cerradas el 3-nov</td></tr>
+      <tr><td>Gasto por episodio</td><td><span class="st warn">Incompleto</span></td><td>PL-017 a PL-020 sin medir; el nombre del episodio se escribe de 11 formas</td></tr>
+      <tr><td>Respaldo GitHub y bóvedas</td><td><span class="st ok">Al día</span></td><td>8 subidas en 6 días; bóvedas de Lingo y Contenido actualizadas hoy</td></tr>
+    </tbody></table></div>
+</section>
+
+<!-- 4 ROI -->
+<section id="roi">
+  <span class="q">Pregunta 4</span>
+  <h2>¿Cómo se calcula su ROI?</h2>
+  <p class="sub"><b>ROI = (ingreso − costo) ÷ costo.</b> Costo = herramientas ($1,800 Claude + $1,500 Google al mes) + anuncios. Ingreso = lo cobrado (anticipos y liquidaciones del Registro). Se cuenta el costo completo aunque las herramientas sirvan a otros proyectos: es el supuesto más estricto.</p>
+  <div class="grid2">
+    <div class="card calc">
+      <h3>Calculadora · Contenido para negocios</h3>
+      <label for="cli">Paquetes vendidos al mes <output id="cliO"></output></label>
+      <input id="cli" type="range" min="0" max="20" step="1" value="6">
+      <label for="pre">Precio por paquete (MXN) <output id="preO"></output></label>
+      <input id="pre" type="range" min="350" max="1500" step="50" value="600">
+      <label for="ads">Anuncios al mes (MXN) <output id="adsO"></output></label>
+      <input id="ads" type="range" min="0" max="3000" step="100" value="500">
+      <div class="res">
+        <div><b id="ing"></b><span>ingreso</span></div>
+        <div><b id="gan"></b><span>ganancia</span></div>
+        <div><b id="roiV"></b><span>ROI</span></div>
+        <div><b id="pe"></b><span>paquetes para no perder</span></div>
+      </div>
+      <p class="note" style="margin-top:12px">Hoy: 0 vendidos, anuncio pausado ($32 gastados, 104 visitas al perfil, 0 mensajes). El punto de equilibrio con $600 es 5.5 paquetes al mes.</p>
+    </div>
+    <div class="card">
+      <h3>Gasto medido por día</h3>
+      <div class="note">Millones de tokens · 23-oct a 3-nov · v2 (medir_gasto.py)</div>
+      <div class="chart" id="chDia"></div>
+      <h3 style="margin-top:18px">¿Quién gastó?</h3>
+      <div class="chart" id="chPiso"></div>
+      <p class="note">Lingo es el que más gasta: el episodio PL-021 costó ≈ 112 M en 9 rondas hasta el sí. 8 sesiones quedaron sin medir.</p>
+    </div>
+  </div>
+  <div class="grid2" style="margin-top:16px">
+    <div class="card">
+      <h3>ROI de Lingo (caso de empresa)</h3>
+      <p class="note" style="color:var(--ink2)">Aquí no hay venta directa: el retorno es <b>tiempo de producción ahorrado</b> y <b>alcance</b>. Fórmula: (horas que costaría hacerlo a mano − horas con OLLIN) × costo por hora, contra la parte del costo fijo que usa. Hoy el dato de horas es <b>hueco</b>; se empieza a medir por episodio.</p>
+      <div class="note" style="margin-top:8px">Vistas por episodio (Instagram @parapaquetes, lectura más reciente)</div>
+      <div class="chart" id="chVistas"></div>
+      <div class="note" style="margin-top:8px">% del video que se ve, en promedio</div>
+      <div class="chart" id="chPct"></div>
+      <p class="note">9 de cada 10 vistas vienen de gente que no sigue la cuenta. PL-019 (10 %) es el peor: el aprendizaje ya está en la propuesta para PL-020.</p>
+    </div>
+    <div class="card">
+      <h3>Lo que el ROI todavía no mide</h3>
+      <ul class="clean">
+        <li><b>Horas de Gael</b> por cliente y por episodio (hueco).</li>
+        <li><b>Margen por paquete</b>: tokens + Flow + impresión + horas (aprobado medirlo; hueco).</li>
+        <li><b>Costo por cliente conseguido</b>: cuánto anuncio cuesta una venta (falta la primera venta).</li>
+        <li><b>ROI de la oficina</b> como producto vendible (falta el primer comprador).</li>
+      </ul>
+      <div class="callout" style="margin-top:16px">Un dato que no se sabe se escribe como <b>hueco</b>, nunca se inventa. Por eso varios campos están vacíos: es honesto, no un descuido.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 VENDER -->
+<section id="vender">
+  <span class="q">Pregunta 5</span>
+  <h2>¿Cómo se vende?</h2>
+  <p class="sub">Tres productos salen del mismo sistema. Cada uno usa el anterior como prueba.</p>
+  <div class="grid3">
+    <div class="card"><span class="pill"><span class="dot" style="background:var(--fuego)"></span>ya a la venta</span><h3 style="margin-top:8px">1 · Contenido para negocios</h3><p class="note" style="color:var(--ink2)">Paquete de contenido de su negocio real en 7 días: $600 (mitad al empezar, mitad al entregar); marca $350; piezas sueltas. Se vende en persona con el menú del negocio impreso de regalo.</p>
+      <div class="grid3" style="grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px">
+        <img src="img/menu1.jpg" alt="Menú de muestra hecho para La Fresita" style="width:100%;border-radius:6px" loading="lazy">
+        <img src="img/menu2.jpg" alt="Menú de muestra hecho para MG Tacos y Hamburguesas" style="width:100%;border-radius:6px" loading="lazy">
+        <img src="img/menu3.jpg" alt="Menú de muestra hecho para Taquería Lety Hno." style="width:100%;border-radius:6px" loading="lazy">
+      </div><p class="note">Muestras hechas con sus menús reales para visitarlos (3-nov).</p></div>
+    <div class="card"><span class="pill"><span class="dot" style="background:var(--agua)"></span>probado en Para Paquetes</span><h3 style="margin-top:8px">2 · Área de marketing operada</h3><p class="note" style="color:var(--ink2)">Para una PyME: Gael opera su oficina de agentes (contenido, publicación, medición, documentación). La prueba es Packaging Lingo: un episodio de video por día de trabajo, medido episodio por episodio. Precio: <b>por definir</b> con la primera empresa (referencia: lo que hoy le cuesta su área de marketing).</p></div>
+    <div class="card"><span class="pill"><span class="dot" style="background:var(--aire)"></span>en diseño</span><h3 style="margin-top:8px">3 · Oficina estándar (kit)</h3><p class="note" style="color:var(--ink2)">Una carpeta que cualquiera mete a su Proyecto de Claude y se adapta a su negocio. Sirve para atraer gente con la serie de reels de la oficina («comenta OFICINA») y llevarla a 1 y 2.</p></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>El argumento para quien invierte</h3>
+    <ul class="clean">
+      <li><b>Costo fijo bajo y conocido:</b> $3,300 MXN al mes mueven 25 agentes en dos empresas.</li>
+      <li><b>Medido desde el día uno:</b> gasto por sesión, métrica por agente, auditoría con evidencia, ROI con huecos declarados.</li>
+      <li><b>Mercado:</b> las PyMEs de México apenas empiezan a usar IA; un negocio de colonia no puede pagar un área de marketing, pero sí $600.</li>
+      <li><b>Lo que falta (y es lo que compra la inversión):</b> las primeras ventas. El sistema produce; falta el canal que convierta.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 6 CONVIENE -->
+<section id="conviene">
+  <span class="q">Pregunta 6</span>
+  <h2>¿Cuál conviene más?</h2>
+  <div class="verdict">
+    <h3>Recomendación</h3>
+    <ol>
+      <li><b>Dónde vive:</b> quedarse en A (suscripción) y arreglar lo que falla (Chrome conectado). Pasar a B con 3 clientes pagados. No pasar a API por ahora.</li>
+      <li><b>Qué vender primero:</b> Contenido para negocios, en persona. Es lo más rápido para tener ingreso y es la prueba que pide un inversionista.</li>
+      <li><b>Qué vender después:</b> el área de marketing operada (mayor ticket), usando Lingo y los primeros clientes como caso.</li>
+      <li><b>El kit</b>, como imán para atraer gente, no como fuente de ingreso al inicio.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 7 RELACION -->
+<section id="relacion">
+  <span class="q">Pregunta 7</span>
+  <h2>¿Cómo se relacionan Contenido, Lingo y la oficina?</h2>
+  <p class="sub">La oficina es el sistema; los dos pisos son dos laboratorios distintos que lo prueban.</p>
+  <div class="card diagram">
+    <svg viewBox="0 0 1000 300" role="img" aria-label="Relación entre la oficina y los dos pisos">
+      <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="var(--muted)"/></marker></defs>
+      <rect x="350" y="20" width="300" height="100" rx="14" fill="var(--fuego)"/>
+      <text x="500" y="56" text-anchor="middle" font-weight="700" font-size="19" style="fill:#fff">LA OFICINA (el sistema)</text>
+      <text x="500" y="80" text-anchor="middle" font-size="13" style="fill:#fff">reglas, medición, gasto, auditoría,</text>
+      <text x="500" y="99" text-anchor="middle" font-size="13" style="fill:#fff">tareas que corren solas</text>
+      <g stroke="var(--muted)" stroke-width="1.6" fill="none" marker-end="url(#ar2)"><path d="M420 120 L230 180"/><path d="M580 120 L770 180"/><path d="M360 235 H640"/><path d="M640 255 H360"/></g>
+      <rect x="40" y="180" width="320" height="100" rx="14" fill="var(--surface)" stroke="var(--fuego)" stroke-width="2"/>
+      <text x="200" y="212" text-anchor="middle" font-weight="600" font-size="16">CONTENIDO PARA NEGOCIOS</text>
+      <text x="200" y="236" text-anchor="middle" font-size="13" style="fill:var(--ink2)">negocio propio de Gael</text>
+      <text x="200" y="256" text-anchor="middle" font-size="13" style="fill:var(--ink2)">prueba que se puede VENDER</text>
+      <rect x="640" y="180" width="320" height="100" rx="14" fill="var(--surface)" stroke="var(--agua)" stroke-width="2"/>
+      <text x="800" y="212" text-anchor="middle" font-weight="600" font-size="16">PACKAGING LINGO</text>
+      <text x="800" y="236" text-anchor="middle" font-size="13" style="fill:var(--ink2)">serie de Para Paquetes</text>
+      <text x="800" y="256" text-anchor="middle" font-size="13" style="fill:var(--ink2)">prueba la CALIDAD</text>
+      <text x="500" y="228" text-anchor="middle" font-size="12" style="fill:var(--muted)">método de guion, sonido, revisión →</text>
+      <text x="500" y="272" text-anchor="middle" font-size="12" style="fill:var(--muted)">← precio, embudo, clientes reales</text>
+    </svg>
+  </div>
+  <div class="grid3" style="margin-top:16px">
+    <div class="card"><h3>Contenido</h3><p class="note" style="color:var(--ink2)">Cliente: negocios chicos. Mide si se vende: mensajes, cotizaciones, anticipos. Usa el método de video de Lingo para sus videos educativos.</p></div>
+    <div class="card"><h3>Lingo</h3><p class="note" style="color:var(--ink2)">Cliente exigente (la empresa donde trabaja Gael). Mide si la calidad alcanza: vistas, % visto, rondas hasta el sí. Sólo se usa lo público.</p></div>
+    <div class="card"><h3>La oficina</h3><p class="note" style="color:var(--ink2)">Une a los dos: un chat por piso, reglas comunes, un ANALISTA que lee los dos pisos y una auditoría para todos.</p></div>
+  </div>
+</section>
+
+<!-- 8 DOCS -->
+<section id="docs">
+  <span class="q">Pregunta 8</span>
+  <h2>¿Para qué sirve la documentación: a Claude y a Gael?</h2>
+  <div class="grid2">
+    <div class="card" style="border-top:4px solid var(--aire)">
+      <h3>Para Claude: memoria para trabajar</h3>
+      <ul class="clean">
+        <li>Cada chat empieza sin memoria: el arranque y la ruta le dicen qué es, qué sigue y qué no tocar.</li>
+        <li>Evita repetir errores (errores que se vuelven regla) y volver a preguntar lo que ya se decidió.</li>
+        <li>Ahorra tokens: leer lo justo, con topes de tamaño.</li>
+        <li>Permite cambiar de chat sin perder nada.</li>
+        <li><b>Forma:</b> texto corto, una sola verdad por tema, siempre al día.</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--fuego)">
+      <h3>Para Gael: ver, decidir y vender</h3>
+      <ul class="clean">
+        <li>Ver dónde está cada cosa y si avanza, sin leer chats.</li>
+        <li>Decidir con números: ROI, gasto, métricas por agente.</li>
+        <li>Explicar y vender el sistema: diagramas, tableros y este documento.</li>
+        <li><b>Forma:</b> visual, de lo general a lo específico, palabras clave.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:16px">La auditoría encontró que la documentación para Claude está al día y la documentación para Gael no tiene dueño. Propuesta: el cierre de cada viernes la actualiza, junto con esta página.</div>
+</section>
+
+<!-- RIESGOS -->
+<section id="riesgos">
+  <span class="q">Lo que hay que saber</span>
+  <h2>Riesgos y lo que falta</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Riesgo</th><th>Qué tan grave</th><th>Qué se hace</th></tr></thead>
+    <tbody>
+      <tr><td>0 ventas hasta hoy</td><td><span class="st bad">Alto</span></td><td>Plan de 2 semanas: 8 negocios visitados con su menú de regalo; meta: 1 anticipo antes del 17-nov</td></tr>
+      <tr><td>Depende de la laptop y el Chrome</td><td><span class="st warn">Medio</span></td><td>Chrome abierto antes de las 9:40; servidor chico (opción B) con 3 clientes</td></tr>
+      <tr><td>Un solo operador</td><td><span class="st warn">Medio</span></td><td>Todo documentado y respaldado en GitHub; el kit estándar es el camino para que otro lo opere</td></tr>
+      <tr><td>Calidad que se ve «hecha con IA»</td><td><span class="st warn">Medio</span></td><td>Desde el 29-oct: sólo negocios y comida reales; VERIFICADOR antes de cada entrega</td></tr>
+      <tr><td>Tope de uso de Claude</td><td><span class="st ok">Controlado</span></td><td>Regla de cambio de chat con número y medición diaria</td></tr>
+    </tbody></table></div>
+</section>
+</main>
+
+<footer><div class="wrap">
+  <p><b>Fuentes:</b> base de datos de la oficina OLLIN, tareas programadas y carpeta OLLIN (leídas el 3-nov-2026); <code>ROI.md</code> y reporte semanal del 30-oct; métricas de Instagram leídas por el SUPERVISOR. Precios externos: <a href="https://www.eesel.ai/blog/claude-sonnet-5-5-pricing">tarifas de la API de Claude (sep-2026)</a>, <a href="https://www.heyuan110.com/posts/ai/2026-02-25-claude-code-pricing/">planes de Claude</a>, <a href="https://sliplane.io/blog/n8n-pricing">precios de n8n (jul-2026)</a>, <a href="https://betterstack.com/community/guides/web-servers/hetzner-cloud-review/">servidores Hetzner</a>. Lo marcado como estimado o supuesto no es dato medido.</p>
+  <p>OLLIN · Gael García · Monterrey · 2026</p>
+</div></footer>
+
+<script>
+(function(){
+const root=document.documentElement;
+try{const t=localStorage.getItem('ollin-theme');if(t)root.setAttribute('data-theme',t)}catch(e){}
+document.getElementById('themebtn').onclick=()=>{const cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');const n=cur==='dark'?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('ollin-theme',n)}catch(e){};drawAll();};
+const css=v=>getComputedStyle(root).getPropertyValue(v).trim();
+
+/* ---- agentes ---- */
+const A=[
+["JEFE","Contenido","Chat «contenido»",["Oficina","Carpeta","Cerebro","GitHub"],"3-nov","ok","Rehízo libreta y calendario"],
+["ESTRATEGA","Contenido","Chat «contenido»",["Carpeta","Oficina"],"16-oct","warn","Sin trabajo desde la hoja 01"],
+["INVESTIGADOR","Contenido","Chat «contenido»",["Google Maps","Carpeta","Oficina"],"26-oct","warn","5 negocios encontrados"],
+["OFERTA","Contenido","Chat «contenido»",["Carpeta","GitHub Pages","Oficina"],"28-oct","ok","Menú digital y precios"],
+["CONTENIDO","Contenido","Chat «contenido»",["Carpeta","Flow","Oficina"],"3-nov","ok","Cerró Halloween; menús sin personaje"],
+["DISEÑADORA","Contenido","Chat «contenido»",["Carpeta","Flow","Oficina"],"29-oct","ok","Reglas de producto real"],
+["CREADORA","Contenido","Chat «contenido»",["Flow (Chrome)","Carpeta","Oficina"],"28-oct","ok","Poses en Flow"],
+["DIFUSIÓN","Contenido","Tarea programada 12:30",["Nube","Chrome · Facebook","Laptop","Oficina"],"3-nov","bad","Atorada: falta el Chrome"],
+["VENTAS","Contenido","Chat «contenido»",["Carpeta","WhatsApp","Oficina"],"3-nov","ok","Lo que se imprime para 3 visitas"],
+["ANALISTA","Contenido","Tareas 8:47 y 17:41 (Sonnet)",["Nube","Oficina"],"3-nov","ok","Alertas y gasto diario"],
+["ORGANIZADOR","Contenido","Cierre del viernes",["Nube","Laptop","Oficina"],"30-oct","ok","Midió y archivó"],
+["VERIFICADOR","Contenido","Chat «contenido»",["Carpeta","Oficina"],"20-oct","bad","Quieto aunque hubo 17 piezas"],
+["REVISOR","Contenido","Subagente de revisión",["Nube","Carpeta","Oficina"],"28-oct","ok","Revisión y mejoras"],
+["VIDEASTA","Contenido","Chat «contenido»",["Carpeta","Laptop (render)","Oficina"],"24-oct","warn","Sin video pedido"],
+["GUIONISTA","Lingo","Chat «parapaquetes»",["my-video","Oficina"],"28-oct","ok","Guion de PL-021"],
+["STORYTELLER","Lingo","Chat «parapaquetes»",["my-video","Oficina"],"28-oct","ok","Rótulos de PL-021"],
+["VOZ","Lingo","Chat «parapaquetes»",["my-video","Azure","Oficina"],"28-oct","ok","Voz alineada"],
+["SONIDO","Lingo","Chat «parapaquetes»",["my-video","Oficina"],"28-oct","ok","33 efectos"],
+["IMÁGENES","Lingo","Chat «parapaquetes»",["Flow (Chrome)","my-video","Oficina"],"30-oct","ok","Video en Flow"],
+["ANIMADOR","Lingo","Chat «parapaquetes»",["my-video (Remotion)","GitHub","Oficina"],"30-oct","ok","PL-021 aprobado"],
+["REVISORES","Lingo","Subagente de revisión",["Nube","my-video","Oficina"],"29-oct","ok","Revisión de 20 hojas"],
+["EMPACADOR","Lingo","Chat «parapaquetes»",["GitHub","my-video","Oficina"],"28-oct","bad","Atorado: falta el PR"],
+["SUPERVISOR","Lingo","Tarea programada 9:41",["Nube","Chrome · Instagram","Obsidian","Oficina"],"3-nov","ok","Midió PL-019"],
+["INVESTIGADOR","Lingo","Chat «parapaquetes»",["Web","Oficina"],"21-oct","warn","Sin investigación pedida"],
+["MOTION","Lingo","Chat «motion»",["Laptop","Flow","Nube (render)","Oficina"],"30-oct","ok","Video entregado"],
+["JEFE de guardia","Oficina","Tarea al tocar la oficina",["Nube","Laptop","Oficina"],"29-oct","warn","Sin prueba de punta a punta"],
+["INVESTIGADOR DE MEJORAS","Oficina","Tarea miércoles 10:17",["Nube","Web","Laptop","Oficina"],"28-oct","ok","3 mejoras propuestas"],
+["Cierre semanal","Oficina","Tarea viernes 16:53",["Nube","Laptop","Oficina"],"30-oct","ok","Reporte, ROI y crecimiento"]];
+const tb=document.querySelector('#agentes tbody');const lab={ok:'Al día',warn:'Quieto',bad:'Falla'};
+function renderA(f){tb.innerHTML='';A.filter(a=>f==='todos'||(f==='solo'?/Tarea/.test(a[2]):a[1]===f)).forEach(a=>{const c=a[1]==='Contenido'?'--fuego':a[1]==='Lingo'?'--agua':'--aire';
+ tb.insertAdjacentHTML('beforeend',`<tr><td><b>${a[0]}</b></td><td><span class="dot" style="background:var(${c})"></span>${a[1]}</td><td>${a[2]}</td><td>${a[3].map(x=>`<span class="pill">${x}</span>`).join('')}</td><td><span class="st ${a[5]}">${lab[a[5]]} · ${a[4]}</span><br><span class="note">${a[6]}</span></td></tr>`)});}
+document.querySelectorAll('.filters button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filters button').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');renderA(b.dataset.f)});
+renderA('todos');
+
+/* ---- charts ---- */
+function bars(el,data,opt){
+  el=document.getElementById(el);const W=el.clientWidth||480,H=opt.h||180,pl=opt.pl||34,pb=26,pt=10;
+  const raw=Math.max(...data.map(d=>d.v))/3,pw=Math.pow(10,Math.floor(Math.log10(raw))),st=[1,2,2.5,5,10].map(k=>k*pw).find(k=>k>=raw);
+  const mx=opt.max||st*3;const n=data.length,bw=(W-pl)/n;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${opt.label}">`;
+  for(let i=0;i<=3;i++){const y=pt+(H-pt-pb)*(1-i/3);s+=`<line x1="${pl}" x2="${W}" y1="${y}" y2="${y}" stroke="${css('--grid')}"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="11" fill="${css('--muted')}">${Math.round(mx*i/3)}${opt.u||''}</text>`}
+  data.forEach((d,i)=>{const h=(H-pt-pb)*d.v/mx,x=pl+i*bw+bw*0.18,w=bw*0.64,y=H-pb-h;
+    s+=`<path d="M${x},${H-pb}V${y+4}a4,4 0 0 1 4,-4h${w-8}a4,4 0 0 1 4,4V${H-pb}z" fill="${css(d.c||opt.c)}"/>`;
+    s+=`<rect class="hit" x="${pl+i*bw}" y="${pt}" width="${bw}" height="${H-pt-pb}" fill="transparent" data-t="${d.k}: ${d.v}${opt.u||''}" data-x="${x+w/2}" data-y="${y}"/>`;
+    if(n<=12)s+=`<text x="${x+w/2}" y="${H-8}" text-anchor="middle" font-size="11" fill="${css('--muted')}">${d.k}</text>`;});
+  s+=`</svg><div class="tt"></div>`;el.innerHTML=s;hover(el);}
+function hbars(el,data,opt){
+  el=document.getElementById(el);const W=el.clientWidth||480,rh=30,H=data.length*rh+6,pl=110;const mx=Math.max(...data.map(d=>d.v));
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${opt.label}">`;
+  data.forEach((d,i)=>{const y=i*rh+4,w=(W-pl-60)*d.v/mx;
+    s+=`<text x="${pl-8}" y="${y+16}" text-anchor="end" font-size="12" fill="${css('--ink2')}">${d.k}</text><path d="M${pl},${y+4}h${Math.max(w-4,1)}a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-${Math.max(w-4,1)}z" fill="${css(d.c)}"/><text x="${pl+w+6}" y="${y+16}" font-size="12" fill="${css('--ink')}">${d.v} M</text>`;
+    s+=`<rect x="0" y="${y}" width="${W}" height="${rh}" fill="transparent" data-t="${d.k}: ${d.v} M (${Math.round(d.v/opt.tot*100)} %)" data-x="${pl+w/2}" data-y="${y+4}"/>`;});
+  s+=`</svg><div class="tt"></div>`;el.innerHTML=s;hover(el);}
+function hover(el){const tt=el.querySelector('.tt'),svg=el.querySelector('svg');
+  svg.querySelectorAll('[data-t]').forEach(r=>{r.addEventListener('pointerenter',()=>{const sc=el.clientWidth/svg.viewBox.baseVal.width;tt.textContent=r.dataset.t;tt.style.left=(r.dataset.x*sc)+'px';tt.style.top=(r.dataset.y*sc)+'px';tt.style.opacity=1});r.addEventListener('pointerleave',()=>tt.style.opacity=0)})}
+function drawAll(){
+  bars('chDia',[["23-oct",21.2],["24-oct",21.6],["26-oct",8.7],["27-oct",48.4],["28-oct",84.2],["29-oct",66.8],["30-oct",15.6],["3-nov",2.1]].map(([k,v])=>({k,v})),{c:'--fuego',u:'',label:'Gasto de tokens por día en millones'});
+  hbars('chPiso',[{k:'Lingo',v:134.1,c:'--agua'},{k:'Contenido',v:88.9,c:'--fuego'},{k:'Dirección',v:41.7,c:'--tierra'},{k:'Tareas solas',v:3.9,c:'--aire'}],{tot:268.6,label:'Gasto por piso'});
+  const ep=["PL-010","PL-011","PL-012","PL-013","PL-014","PL-015","PL-016","PL-017","PL-018","PL-019"];
+  bars('chVistas',ep.map((k,i)=>({k:k.slice(3),v:[349,1100,2384,3318,2015,1782,1505,1780,1466,518][i]})),{c:'--agua',label:'Vistas por episodio',h:160,pl:40});
+  bars('chPct',ep.map((k,i)=>({k:k.slice(3),v:[8.5,25.3,30.1,30.2,21.1,25.5,26.1,27.2,24.8,10][i]})),{c:'--agua',u:'%',max:36,label:'Porcentaje visto por episodio',h:140});
+}
+drawAll();let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(drawAll,150)});
+
+/* ---- calculadoras ---- */
+const P={opus:0.8*0.2+0.12*5+0.05*4+0.03*20,sonnet:0.8*0.2+0.12*2.5+0.05*2+0.03*10};P.mix=(P.opus+P.sonnet)/2;let m='opus';
+const f0=n=>n.toLocaleString('es-MX',{maximumFractionDigits:0});
+function api(){const t=+tok.value;tokO.textContent=t+' M';const usd=t*P[m];apiUsd.textContent='$'+f0(usd);apiMxn.textContent='$'+f0(usd*18);veces.textContent=(usd*18/1800).toFixed(1)+'×';document.getElementById('apiCell').textContent='~$'+f0(usd*18)+' MXN (estimado)';}
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');m=b.dataset.m;api()});
+tok.oninput=api;api();
+function roi(){const c=+cli.value,p=+pre.value,a=+ads.value;cliO.textContent=c;preO.textContent='$'+f0(p);adsO.textContent='$'+f0(a);
+ const costo=3300+a,ing=c*p,g=ing-costo;ing_.textContent='$'+f0(ing);gan.textContent=(g<0?'−$':'$')+f0(Math.abs(g));roiV.textContent=Math.round(g/costo*100)+' %';pe.textContent=(costo/p).toFixed(1);}
+const ing_=document.getElementById('ing');[cli,pre,ads].forEach(x=>x.oninput=roi);roi();
+})();
+</script>
+</body>
+</html>
